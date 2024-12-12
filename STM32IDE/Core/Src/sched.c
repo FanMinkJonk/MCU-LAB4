@@ -40,7 +40,7 @@ void SCH_Update(void){
 					SCH_tasks_G[Index].Delay = SCH_tasks_G[Index].Period;
 				}
 			} else {
-				SCH_tasks_G[Index].Delay -= 1;
+				SCH_tasks_G[Index].Delay -= TIMECYCLE;
 			}
 		}
 	}

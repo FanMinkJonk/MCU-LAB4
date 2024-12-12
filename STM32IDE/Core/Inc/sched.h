@@ -11,6 +11,7 @@
 //--- Private Include ----------------------------
 
 #include "main.h"
+#include "timer.h"
 
 //--- Variables ----------------------------------
 //- Private Struct -------------------------------

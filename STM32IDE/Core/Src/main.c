@@ -90,8 +90,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
 
+  timer_init(HAL_RCC_GetHCLKFreq(), htim2.Init.Prescaler, htim2.Init.Period);
   SCH_Init();
-//  SCH_Add_Task(Led_Display, 0, 1000);
   /* USER CODE END 2 */
 
   /* Infinite loop */
