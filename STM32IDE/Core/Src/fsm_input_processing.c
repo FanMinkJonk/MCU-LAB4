@@ -11,9 +11,15 @@
 
 //--- Variables ----------------------------------
 
-uint8_t buttonState[N0_OF_BUTTONS] = {BUTTON_STATE_RELEASE, BUTTON_STATE_RELEASE, BUTTON_STATE_RELEASE};
+uint8_t buttonState[N0_OF_BUTTONS];
 
 //--- Functions Definition -----------------------
+
+void init_fsm_input_processing(){
+	for(int i = 0; i<N0_OF_BUTTONS; ++i){
+		buttonState[i] = BUTTON_STATE_RELEASE;
+	}
+}
 
 void fsm_input_processing(){
 	for(uint8_t i = BUTTON_MODE; i<N0_OF_BUTTONS; ++i){
@@ -31,19 +37,7 @@ void fsm_input_processing(){
 				buttonState[i] = BUTTON_STATE_RELEASE;
 				break;
 			}
-//			if(is_button_pressed_1s(i)){
-//				buttonState[i] = BUTTON_STATE_PRESSED_1S;
-//			}
 			break;
-//		case BUTTON_STATE_PRESSED_1S:
-//			if(!is_button_pressed(i)){
-//				buttonState[i] = BUTTON_STATE_RELEASE;
-//			}
-//			//TODO
-//			if(is_button_pressed_1s(INPUT_MODE_ID)){
-//				flag_m = 1;
-//			}
-//			break;
 		default:
 			break;
 		}

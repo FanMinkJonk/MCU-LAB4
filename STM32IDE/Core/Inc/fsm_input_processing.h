@@ -16,6 +16,7 @@
 
 //--- Functions Declaration ----------------------
 
+void init_fsm_input_processing(void);
 void fsm_input_processing(void);
 
 //--- Private Defines ----------------------------

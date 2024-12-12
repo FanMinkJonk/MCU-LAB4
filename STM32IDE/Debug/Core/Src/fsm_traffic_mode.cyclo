@@ -1,0 +1,14 @@
+../Core/Src/fsm_traffic_mode.c:31:6:config_leds	1
+../Core/Src/fsm_traffic_mode.c:41:6:init_auto_mode	1
+../Core/Src/fsm_traffic_mode.c:57:6:init_red_config_mode	1
+../Core/Src/fsm_traffic_mode.c:70:6:init_amber_config_mode	1
+../Core/Src/fsm_traffic_mode.c:83:6:init_green_config_mode	1
+../Core/Src/fsm_traffic_mode.c:98:6:fsm_mode_auto	17
+../Core/Src/fsm_traffic_mode.c:200:6:mode_red_config	5
+../Core/Src/fsm_traffic_mode.c:218:6:mode_amber_config	6
+../Core/Src/fsm_traffic_mode.c:237:6:mode_green_config	5
+../Core/Src/fsm_traffic_mode.c:257:6:one_sec_count	1
+../Core/Src/fsm_traffic_mode.c:261:6:blinky_led	1
+../Core/Src/fsm_traffic_mode.c:265:6:blinky_7_seg	1
+../Core/Src/fsm_traffic_mode.c:269:6:init_fsm_traffic_mode	1
+../Core/Src/fsm_traffic_mode.c:275:6:fsm_traffic_mode	13

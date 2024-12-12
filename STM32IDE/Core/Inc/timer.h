@@ -13,11 +13,13 @@
 #include "main.h"
 #include "global.h"
 
+//--- Variables ----------------------------------
+
+extern int TIMECYCLE;
+
 //--- Functions Declaration ----------------------
 
 void timer_init(uint32_t HCLK, uint32_t Prescaler, uint32_t Period);
-void timer_set_one_sec();
-void timer_run();
 
 //--- Private Defines ----------------------------
 

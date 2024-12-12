@@ -14,6 +14,7 @@
 #include "global.h"
 #include "timer.h"
 #include "led_7_segment.h"
+#include "sched.h"
 
 //--- Variables ----------------------------------
 
@@ -21,6 +22,10 @@ extern uint8_t traffic_mode;
 extern uint8_t light_mode;
 
 //--- Functions Declaration ----------------------
+
+void one_sec_count(void);
+void blinky_led(void);
+void blinky_7_seg(void);
 
 void init_fsm_traffic_mode(void);
 void fsm_traffic_mode(void);

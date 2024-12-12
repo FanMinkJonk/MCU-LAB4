@@ -50,7 +50,8 @@ void init_auto_mode(void){
 	seg_flag 	  = 0;
 	toggle7SEG(0);
 	config_leds(0x1e);
-	set_one_sec_timer();
+	SCH_Add_Task(one_sec_count, 1000, 0);
+	SCH_Add_Task(blinky_7_seg, 250, 250);
 }
 
 void init_red_config_mode(void){
@@ -63,7 +64,7 @@ void init_red_config_mode(void){
 	blinky_led_flag = 0;
 	toggle7SEG(0);
 	config_leds(0x1b);
-	set_one_sec_timer();
+	SCH_Add_Task(blinky_led, 500, 0);
 }
 
 void init_amber_config_mode(void){
@@ -76,7 +77,7 @@ void init_amber_config_mode(void){
 	blinky_led_flag = 0;
 	toggle7SEG(0);
 	config_leds(0x2d);
-	set_one_sec_timer();
+	SCH_Add_Task(blinky_led, 500, 0);
 }
 
 void init_green_config_mode(void){
@@ -89,7 +90,7 @@ void init_green_config_mode(void){
 	blinky_led_flag = 0;
 	toggle7SEG(0);
 	config_leds(0x36);
-	set_one_sec_timer();
+	SCH_Add_Task(blinky_led, 500, 0);
 }
 
 //- Traffic Modes --------------------------------
@@ -99,7 +100,9 @@ void fsm_mode_auto(void){
 	case STATUS_RED_GREEN:
 		config_leds(0x1e);
 		if(one_sec_flag == 1){
-			set_one_sec_timer();
+			HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+			SCH_Add_Task(one_sec_count, 1000, 0);
+			one_sec_flag = 0;
 			flag_l = (--green_counter == 0);
 			--red_counter;
 		}
@@ -121,7 +124,8 @@ void fsm_mode_auto(void){
 	case STATUS_RED_AMBER:
 		config_leds(0x1d);
 		if(one_sec_flag == 1){
-			set_one_sec_timer();
+			SCH_Add_Task(one_sec_count, 1000, 0);
+			one_sec_flag = 0;
 			flag_l = (--amber_counter == 0);
 			--red_counter;
 		}
@@ -144,7 +148,8 @@ void fsm_mode_auto(void){
 	case STATUS_GREEN_RED:
 		config_leds(0x33);
 		if(one_sec_flag == 1){
-			set_one_sec_timer();
+			SCH_Add_Task(one_sec_count, 1000, 0);
+			one_sec_flag = 0;
 			flag_l = (--green_counter == 0);
 			--red_counter;
 		}
@@ -166,7 +171,8 @@ void fsm_mode_auto(void){
 	case STATUS_AMBER_RED:
 		config_leds(0x2b);
 		if(one_sec_flag == 1){
-			set_one_sec_timer();
+			SCH_Add_Task(one_sec_count, 1000, 0);
+			one_sec_flag = 0;
 			flag_l = (--amber_counter == 0);
 			--red_counter;
 		}
@@ -192,6 +198,7 @@ void fsm_mode_auto(void){
 }
 
 void mode_red_config(void){
+	SCH_Add_Task(blinky_led, 500, 0);
 	if(flag_i == 1){
 		flag_i = 0;
 		red_counter = (((++red_counter) == 100) ? 2 : red_counter);
@@ -209,6 +216,7 @@ void mode_red_config(void){
 }
 
 void mode_amber_config(void){
+	SCH_Add_Task(blinky_led, 500, 0);
 	if(flag_i == 1){
 		flag_i = 0;
 		amber_counter = (((++amber_counter) == 100) ? 1 : amber_counter);
@@ -227,6 +235,7 @@ void mode_amber_config(void){
 }
 
 void mode_green_config(void){
+	SCH_Add_Task(blinky_led, 500, 0);
 	if(flag_i == 1){
 		flag_i = 0;
 		green_counter = (((++green_counter) == 100) ? 1 : green_counter);
@@ -245,10 +254,23 @@ void mode_green_config(void){
 }
 
 //- Global Functions -----------------------------
+void one_sec_count(void){
+	one_sec_flag = 1;
+}
+
+void blinky_led(void){
+	blinky_led_flag = 1;
+}
+
+void blinky_7_seg(void){
+	seg_flag = 1;
+}
+
 void init_fsm_traffic_mode(){
 	traffic_mode = MODE_AUTO;
 	light_mode = STATUS_RED_GREEN;
 	init_auto_mode();
+	SCH_Add_Task(one_sec_count, 1000, 0);
 }
 
 void fsm_traffic_mode(void){
@@ -312,7 +334,7 @@ void fsm_traffic_mode(void){
 		break;
 	}
 	if(one_sec_flag == 1){
-		set_one_sec_timer();
+		one_sec_flag = 0;
 	}
 }
 

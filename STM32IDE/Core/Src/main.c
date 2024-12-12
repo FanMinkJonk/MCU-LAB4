@@ -22,6 +22,10 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "sched.h"
+#include "fsm_traffic_mode.h"
+#include "fsm_input_processing.h"
+#include "input_reading.h"
+#include "global.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -48,6 +52,7 @@ TIM_HandleTypeDef htim2;
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
+static void MX_GPIO_Init(void);
 static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -55,6 +60,10 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//void one_sec_count(void){
+//	one_sec_flag = 1;
+//}
+
 
 /* USER CODE END 0 */
 
@@ -86,12 +95,19 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+  MX_GPIO_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim2);
 
   timer_init(HAL_RCC_GetHCLKFreq(), htim2.Init.Prescaler, htim2.Init.Period);
+
   SCH_Init();
+  SCH_Add_Task(button_reading, 10, 10);
+
+  init_button_reading();
+  init_fsm_input_processing();
+  init_fsm_traffic_mode();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -99,6 +115,8 @@ int main(void)
   while (1)
   {
 	  SCH_Dispatch_Tasks();
+	  fsm_input_processing();
+	  fsm_traffic_mode();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -185,6 +203,63 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 2 */
 
+}
+
+/**
+  * @brief GPIO Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_GPIO_Init(void)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+/* USER CODE BEGIN MX_GPIO_Init_1 */
+/* USER CODE END MX_GPIO_Init_1 */
+
+  /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, LED_RED_1_Pin|LED_AMBER_1_Pin|LED_GREEN_1_Pin|LED_RED_2_Pin
+                          |LED_AMBER_2_Pin|LED_GREEN_2_Pin|EN0_Pin|EN1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, SEG71_0_Pin|SEG71_1_Pin|SEG72_2_Pin|SEG72_3_Pin
+                          |SEG72_4_Pin|SEG72_5_Pin|SEG72_6_Pin|SEG71_2_Pin
+                          |SEG71_3_Pin|SEG71_4_Pin|SEG71_5_Pin|SEG71_6_Pin
+                          |SEG72_0_Pin|SEG72_1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : INPUT_MODE_Pin INPUT_INCREASE_Pin INPUT_SET_Pin */
+  GPIO_InitStruct.Pin = INPUT_MODE_Pin|INPUT_INCREASE_Pin|INPUT_SET_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : LED_RED_1_Pin LED_AMBER_1_Pin LED_GREEN_1_Pin LED_RED_2_Pin
+                           LED_AMBER_2_Pin LED_GREEN_2_Pin EN0_Pin EN1_Pin */
+  GPIO_InitStruct.Pin = LED_RED_1_Pin|LED_AMBER_1_Pin|LED_GREEN_1_Pin|LED_RED_2_Pin
+                          |LED_AMBER_2_Pin|LED_GREEN_2_Pin|EN0_Pin|EN1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : SEG71_0_Pin SEG71_1_Pin SEG72_2_Pin SEG72_3_Pin
+                           SEG72_4_Pin SEG72_5_Pin SEG72_6_Pin SEG71_2_Pin
+                           SEG71_3_Pin SEG71_4_Pin SEG71_5_Pin SEG71_6_Pin
+                           SEG72_0_Pin SEG72_1_Pin */
+  GPIO_InitStruct.Pin = SEG71_0_Pin|SEG71_1_Pin|SEG72_2_Pin|SEG72_3_Pin
+                          |SEG72_4_Pin|SEG72_5_Pin|SEG72_6_Pin|SEG71_2_Pin
+                          |SEG71_3_Pin|SEG71_4_Pin|SEG71_5_Pin|SEG71_6_Pin
+                          |SEG72_0_Pin|SEG72_1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+/* USER CODE BEGIN MX_GPIO_Init_2 */
+/* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
